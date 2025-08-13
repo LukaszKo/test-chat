@@ -1,20 +1,17 @@
 {
-  "name": "@method-inc/chat",
+  "name": "test-chat",
   "version": "1.1.4",
-  "description": "Method input",
+  "description": "Test chat",
   "license": "MIT",
-  "author": "Method",
+  "author": "Test",
   "repository": {
     "type": "git",
-    "url": "https://github.com/method-inc/rnr-method.git"
+    "url": "https://github.com/LukaszKo/test-chat.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "bugs": {
-    "url": "https://github.com/method-inc/rnr-method/issues"
-  },
-  "homepage": "https://github.com/method-inc/rnr-method#readme",
+  "homepage": "https://github.com/LukaszKo/test-chat#readme",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -33,7 +30,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
-    "pub:beta": "pnpm publish --no-git-checks --access public --tag beta",
+    "pub:beta": "pnpm publish --access public --tag beta",
     "pub:next": "pnpm publish --no-git-checks --access public --tag next",
     "pub:release": "pnpm publish --access public"
   },
