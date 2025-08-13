@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+
+  "include": ["./src/**/*", "nativewind-env.d.ts"],
+  "compilerOptions": {
+    "target": "esnext",
+    "jsxImportSource": "nativewind",
+    "module": "commonjs",
+    "lib": ["es2017"],
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "isolatedModules": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": false,
+    "types": ["react-native-web"],
+    "paths": {
+      "react-native": ["react-native-web"]
+    }
+  },
+  "exclude": ["dist", "build", "node_modules"]
+}
