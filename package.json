@@ -1,15 +1,12 @@
 {
-  "name": "test-chat",
+  "name": "@lukas_ko/test-chat",
   "version": "1.1.4",
   "description": "Test chat",
   "license": "MIT",
   "author": "Test",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LukaszKo/test-chat.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "url": "git+https://github.com/LukaszKo/test-chat.git"
   },
   "homepage": "https://github.com/LukaszKo/test-chat#readme",
   "main": "dist/index.js",

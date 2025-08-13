@@ -13,4 +13,6 @@ export default defineConfig((options: Options) => ({
   esbuildOptions(options) {
     options.jsx = 'preserve';
   },
+  minify: true,
+  // treeshake: 'recommended',
 }));
