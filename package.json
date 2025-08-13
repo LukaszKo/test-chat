@@ -41,7 +41,8 @@
     "nativewind": "^4.1.23",
     "react-native-actions-sheet": "^0.9.7",
     "react-native-keyboard-controller": "^1.18.4",
-    "rn-emoji-keyboard": "^1.7.0"
+    "rn-emoji-keyboard": "^1.7.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@tsconfig/react-native": "^3.0.6",
