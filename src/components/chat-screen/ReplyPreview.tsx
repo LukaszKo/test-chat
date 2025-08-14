@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { X } from 'lucide-react-native';
 import { Message } from '../shared/types';
+import { useTheme } from '../../theme/useTheme';
 
 interface ReplyPreviewProps {
   replyToMessage: Message;
@@ -9,6 +10,8 @@ interface ReplyPreviewProps {
 }
 
 const ReplyPreview: React.FC<ReplyPreviewProps> = ({ replyToMessage, onCancel }) => {
+  const theme = useTheme();
+
   const truncateText = (text: string, maxLength: number = 50) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
@@ -16,31 +19,111 @@ const ReplyPreview: React.FC<ReplyPreviewProps> = ({ replyToMessage, onCancel })
 
   const hasExistingReply = !!replyToMessage.replyTo;
 
+  const containerStyle: ViewStyle = {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+  };
+
+  const mainRowStyle: ViewStyle = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  };
+
+  const contentStyle: ViewStyle = {
+    flex: 1,
+    marginRight: theme.spacing.sm,
+  };
+
+  const indicatorRowStyle: ViewStyle = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.xs / 2,
+  };
+
+  const indicatorStyle: ViewStyle = {
+    width: 4,
+    backgroundColor: theme.colors.primary,
+    borderRadius: 2,
+    marginRight: theme.spacing.sm,
+    height: hasExistingReply ? 48 : 32,
+  };
+
+  const textContentStyle: ViewStyle = {
+    flex: 1,
+  };
+
+  const headerTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    fontWeight: theme.typography.fontWeight.medium,
+    color: theme.colors.primary,
+    marginBottom: theme.spacing.xs / 2,
+  };
+
+  const originalReplyStyle: ViewStyle = {
+    marginBottom: theme.spacing.xs,
+    padding: theme.spacing.xs,
+    backgroundColor: theme.colors.background,
+    borderRadius: 8,
+    borderLeftWidth: 2,
+    borderLeftColor: theme.colors.border,
+  };
+
+  const originalReplyHeaderStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.xs / 2,
+  };
+
+  const originalReplyTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: theme.colors.textSecondary,
+    lineHeight: theme.typography.lineHeight.small,
+  };
+
+  const messageTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: theme.colors.text,
+    lineHeight: theme.typography.lineHeight.small,
+  };
+
+  const cancelButtonStyle: ViewStyle = {
+    height: 32,
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    backgroundColor: theme.colors.border,
+  };
+
   return (
-    <View className="border-b border-gray-200 bg-gray-50 px-4 py-3">
-      <View className="flex-row items-center justify-between">
-        <View className="flex-1 mr-3">
-          <View className="flex-row items-center mb-1">
-            <View className="w-1 bg-blue-500 rounded-full mr-3" style={{ height: hasExistingReply ? 48 : 32 }} />
-            <View className="flex-1">
-              <Text className="text-xs font-medium text-blue-600 mb-1">
+    <View style={containerStyle}>
+      <View style={mainRowStyle}>
+        <View style={contentStyle}>
+          <View style={indicatorRowStyle}>
+            <View style={indicatorStyle} />
+            <View style={textContentStyle}>
+              <Text style={headerTextStyle}>
                 Replying to {replyToMessage.isMe ? 'yourself' : (replyToMessage.senderName || 'sender')}
                 {hasExistingReply && ' (reply thread)'}
               </Text>
               
               {/* Show the original reply context if this message is already a reply */}
               {hasExistingReply && (
-                <View className="mb-2 p-2 bg-gray-100 rounded-lg border-l-2 border-gray-300">
-                  <Text className="text-xs text-gray-500 mb-1">
+                <View style={originalReplyStyle}>
+                  <Text style={originalReplyHeaderStyle}>
                     Originally replying to: {replyToMessage.replyTo!.isMe ? 'yourself' : (replyToMessage.replyTo!.senderName || 'sender')}
                   </Text>
-                  <Text className="text-xs text-gray-600 leading-3">
+                  <Text style={originalReplyTextStyle}>
                     {truncateText(replyToMessage.replyTo!.text, 40)}
                   </Text>
                 </View>
               )}
               
-              <Text className="text-sm text-gray-700 leading-4">
+              <Text style={messageTextStyle}>
                 {truncateText(replyToMessage.text)}
               </Text>
             </View>
@@ -49,10 +132,10 @@ const ReplyPreview: React.FC<ReplyPreviewProps> = ({ replyToMessage, onCancel })
         
         <TouchableOpacity
           onPress={onCancel}
-          className="h-8 w-8 items-center justify-center rounded-full bg-gray-200"
+          style={cancelButtonStyle}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <X size={16} color="#666" />
+          <X size={16} color={theme.colors.textSecondary} />
         </TouchableOpacity>
       </View>
     </View>

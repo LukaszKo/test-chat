@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
-import { View, Text, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { MessageItemProps } from '../shared/types';
 import { formatMessageTime } from '../../utils/dateUtils';
 import ReplyBubble from './ReplyBubble';
+import { useTheme } from '../../theme/useTheme';
 
 const MessageItem: React.FC<MessageItemProps> = ({ message, onLongPress, onReactionPress }) => {
+  const theme = useTheme();
   const messageRef = useRef<View>(null);
 
   const handleLongPress = () => {
@@ -23,18 +25,97 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, onLongPress, onReact
     }
   };
 
+  const containerStyle: ViewStyle = {
+    marginBottom: theme.spacing.sm,
+    alignItems: message.isMe ? 'flex-end' : 'flex-start',
+  };
+
+  const messageBubbleStyle: ViewStyle = {
+    maxWidth: '80%',
+    borderRadius: 16,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+    backgroundColor: message.isMe 
+      ? theme.colors.messageBubble.sent 
+      : theme.colors.messageBubble.received,
+    borderBottomRightRadius: message.isMe ? 4 : 16,
+    borderBottomLeftRadius: message.isMe ? 16 : 4,
+  };
+
+  const messageTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.medium,
+    color: message.isMe 
+      ? theme.colors.messageBubble.sentText 
+      : theme.colors.messageBubble.receivedText,
+    lineHeight: theme.typography.lineHeight.medium,
+  };
+
+  const reactionsContainerStyle: ViewStyle = {
+    marginTop: theme.spacing.xs / 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+    borderRadius: 20,
+    justifyContent: message.isMe ? 'flex-end' : 'flex-start',
+  };
+
+  const reactionItemStyle: ViewStyle = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.xs / 2,
+  };
+
+  const reactionEmojiStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+  };
+
+  const reactionCountStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: theme.colors.textSecondary,
+    marginLeft: theme.spacing.xs / 2,
+    fontWeight: theme.typography.fontWeight.medium,
+  };
+
+  const metaContainerStyle: ViewStyle = {
+    marginHorizontal: theme.spacing.xs,
+    marginTop: theme.spacing.xs / 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: message.isMe ? 'flex-end' : 'flex-start',
+  };
+
+  const timeStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: theme.colors.textSecondary,
+  };
+
+  const statusContainerStyle: ViewStyle = {
+    marginLeft: theme.spacing.xs / 2,
+  };
+
+  const statusTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'read':
+        return theme.colors.primary;
+      default:
+        return theme.colors.textSecondary;
+    }
+  };
+
   return (
-    <View className={`mb-3 ${message.isMe ? 'items-end' : 'items-start'}`}>
+    <View style={containerStyle}>
       <Pressable
         ref={messageRef}
         onLongPress={handleLongPress}
         delayLongPress={500}
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-          message.isMe ? 'rounded-br-none bg-blue-500' : 'rounded-bl-none bg-gray-200'
-        }`}
+        style={messageBubbleStyle}
       >
         {message.replyTo && <ReplyBubble replyTo={message.replyTo} isMyMessage={message.isMe} />}
-        <Text className={`text-base ${message.isMe ? 'text-white' : 'text-gray-900'}`}>
+        <Text style={messageTextStyle}>
           {message.text}
         </Text>
       </Pressable>
@@ -43,32 +124,32 @@ const MessageItem: React.FC<MessageItemProps> = ({ message, onLongPress, onReact
       {message.reactions && message.reactions.length > 0 && (
         <TouchableOpacity
           onPress={handleReactionPress}
-          className={`mt-1 flex-row items-center bg-white rounded-full ${
-            message.isMe ? 'justify-end' : 'justify-start'
-          }`}
+          style={reactionsContainerStyle}
         >
           {message.reactions.map((reaction, index) => (
-            <View key={`${reaction.emoji}-${index}`} className='flex-row items-center p-1'>
-              <Text className='text-sm'>{reaction.emoji}</Text>
+            <View key={`${reaction.emoji}-${index}`} style={reactionItemStyle}>
+              <Text style={reactionEmojiStyle}>{reaction.emoji}</Text>
               {reaction.count > 1 && (
-                <Text className='text-xs text-gray-600 ml-1 font-medium'>{reaction.count}</Text>
+                <Text style={reactionCountStyle}>{reaction.count}</Text>
               )}
             </View>
           ))}
         </TouchableOpacity>
       )}
 
-      <View
-        className={`mx-2 mt-1 flex-row items-center ${
-          message.isMe ? 'justify-end' : 'justify-start'
-        }`}
-      >
-        <Text className='text-xs text-gray-500'>{formatMessageTime(message.timestamp)}</Text>
+      <View style={metaContainerStyle}>
+        <Text style={timeStyle}>{formatMessageTime(message.timestamp)}</Text>
         {message.isMe && message.status && (
-          <View className='ml-1'>
-            {message.status === 'sent' && <Text className='text-xs text-gray-400'>✓</Text>}
-            {message.status === 'delivered' && <Text className='text-xs text-gray-400'>✓✓</Text>}
-            {message.status === 'read' && <Text className='text-xs text-blue-500'>✓✓</Text>}
+          <View style={statusContainerStyle}>
+            {message.status === 'sent' && (
+              <Text style={[statusTextStyle, { color: getStatusColor(message.status) }]}>✓</Text>
+            )}
+            {message.status === 'delivered' && (
+              <Text style={[statusTextStyle, { color: getStatusColor(message.status) }]}>✓✓</Text>
+            )}
+            {message.status === 'read' && (
+              <Text style={[statusTextStyle, { color: getStatusColor(message.status) }]}>✓✓</Text>
+            )}
           </View>
         )}
       </View>

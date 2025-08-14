@@ -1,56 +1,86 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { ChatAvatarProps } from './types';
+import { useTheme } from '../../theme/useTheme';
 
 const ChatAvatar: React.FC<ChatAvatarProps> = ({ avatar, isOnline = false, size = 'medium' }) => {
-  const getSizeClasses = () => {
+  const theme = useTheme();
+
+  const getAvatarSize = () => {
     switch (size) {
       case 'small':
-        return 'w-8 h-8';
+        return 32;
       case 'large':
-        return 'w-16 h-16';
+        return 64;
       default:
-        return 'w-12 h-12';
+        return 48;
     }
   };
 
-  const getTextSizeClasses = () => {
+  const getTextSize = () => {
     switch (size) {
       case 'small':
-        return 'text-sm';
+        return theme.typography.fontSize.small;
       case 'large':
-        return 'text-2xl';
+        return theme.typography.fontSize.xlarge;
       default:
-        return 'text-lg';
+        return theme.typography.fontSize.large;
     }
   };
 
-  const getIndicatorSizeClasses = () => {
+  const getIndicatorSize = () => {
     switch (size) {
       case 'small':
-        return 'w-3 h-3';
+        return 12;
       case 'large':
-        return 'w-6 h-6';
+        return 24;
       default:
-        return 'w-4 h-4';
+        return 16;
     }
+  };
+
+  const avatarSize = getAvatarSize();
+  const indicatorSize = getIndicatorSize();
+
+  const containerStyle: ViewStyle = {
+    position: 'relative',
+  };
+
+  const avatarStyle: ViewStyle = {
+    width: avatarSize,
+    height: avatarSize,
+    borderRadius: avatarSize / 2,
+    backgroundColor: theme.colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
+  const textStyle: TextStyle = {
+    fontSize: getTextSize(),
+    color: theme.colors.text,
+  };
+
+  const indicatorStyle: ViewStyle = {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: indicatorSize,
+    height: indicatorSize,
+    backgroundColor: theme.colors.success,
+    borderRadius: indicatorSize / 2,
+    borderWidth: 2,
+    borderColor: theme.colors.background,
   };
 
   return (
-    <View className='relative'>
+    <View style={containerStyle}>
       {/* Avatar */}
-      <View
-        className={`${getSizeClasses()} rounded-full bg-gray-200 items-center justify-center`}
-      >
-        <Text className={`${getTextSizeClasses()}`}>{avatar}</Text>
+      <View style={avatarStyle}>
+        <Text style={textStyle}>{avatar}</Text>
       </View>
 
       {/* Online indicator */}
-      {isOnline && (
-        <View
-          className={`absolute -bottom-0.5 -right-0.5 ${getIndicatorSizeClasses()} bg-green-500 rounded-full border-2 border-white`}
-        />
-      )}
+      {isOnline && <View style={indicatorStyle} />}
     </View>
   );
 };

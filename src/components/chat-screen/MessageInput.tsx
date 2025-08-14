@@ -6,12 +6,15 @@ import {
   Platform,
   NativeSyntheticEvent,
   TextInputContentSizeChangeEventData,
+  ViewStyle,
+  TextStyle,
 } from 'react-native';
 import { Plus, Send, Mic } from 'lucide-react-native';
 import { MessageInputProps, AttachmentResult } from '../shared/types';
 import { AttachmentMenu } from '../shared/AttachmentMenu';
 // import { useAttachmentMenu } from '../../hooks/useAttachmentMenu';
 import ReplyPreview from './ReplyPreview';
+import { useTheme } from '../../theme/useTheme';
 
 interface MessageInputRef {
   focus: () => void;
@@ -31,6 +34,7 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
     },
     ref
   ) => {
+    const theme = useTheme();
     const textInputRef = useRef<TextInput>(null);
 
     useImperativeHandle(ref, () => ({
@@ -91,35 +95,74 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
       }
     }, [value, onSend]);
 
+    const containerStyle: ViewStyle = {
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.border,
+      backgroundColor: theme.colors.background,
+    };
+
+    const inputRowStyle: ViewStyle = {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.xs,
+      minHeight: height,
+    };
+
+    const attachButtonStyle: ViewStyle = {
+      marginRight: theme.spacing.sm,
+    };
+
+    const inputContainerStyle: ViewStyle = {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 25,
+      backgroundColor: theme.colors.surface,
+      paddingHorizontal: theme.spacing.lg,
+      paddingVertical: theme.spacing.xs,
+    };
+
+    const textInputStyle: TextStyle = {
+      flex: 1,
+      fontSize: theme.typography.fontSize.medium,
+      maxHeight: 70,
+      minHeight: 18,
+      paddingTop: Platform.OS === 'ios' ? 6 : 3,
+      paddingBottom: Platform.OS === 'ios' ? 6 : 3,
+      color: theme.colors.text,
+    };
+
+    const sendButtonStyle: ViewStyle = {
+      marginLeft: theme.spacing.sm,
+      height: 40,
+      width: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 20,
+      backgroundColor: value.trim() ? theme.colors.primary : theme.colors.border,
+    };
+
     return (
       <>
         {replyToMessage && onCancelReply && (
           <ReplyPreview replyToMessage={replyToMessage} onCancel={onCancelReply} />
         )}
-        <View className='border-t border-gray-100 bg-white'>
-          <View className='flex-row items-center bg-white px-4 py-2' style={{ minHeight: height }}>
-            <TouchableOpacity className='mr-3' onPress={() => {}}>
-              <Plus size={24} color='#6B7280' />
+        <View style={containerStyle}>
+          <View style={inputRowStyle}>
+            <TouchableOpacity style={attachButtonStyle} onPress={() => {}}>
+              <Plus size={24} color={theme.colors.textSecondary} />
             </TouchableOpacity>
 
-            <View className='flex-1 flex-row items-center rounded-full bg-gray-100 px-4 py-1.5'>
+            <View style={inputContainerStyle}>
               <TextInput
                 ref={textInputRef}
-                style={[
-                  {
-                    flex: 1,
-                    fontSize: 16,
-                    maxHeight: 70,
-                    minHeight: 18,
-                    paddingTop: Platform.OS === 'ios' ? 6 : 3,
-                    paddingBottom: Platform.OS === 'ios' ? 6 : 3,
-                    color: '#000',
-                  },
-                ]}
+                style={textInputStyle}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder='Napisz wiadomość...'
-                placeholderTextColor='#999'
+                placeholderTextColor={theme.colors.textSecondary}
                 multiline
                 maxLength={1000}
                 onFocus={onFocus}
@@ -131,11 +174,14 @@ const MessageInput = forwardRef<MessageInputRef, MessageInputProps>(
 
             <TouchableOpacity
               onPress={handleSend}
-              className='ml-3 h-10 w-10 items-center justify-center rounded-full'
-              style={{ backgroundColor: value.trim() ? '#3B82F6' : '#D1D5DB' }}
+              style={sendButtonStyle}
               disabled={!value.trim()}
             >
-              {value.trim() ? <Send size={18} color='white' /> : <Mic size={18} color='white' />}
+              {value.trim() ? (
+                <Send size={18} color='white' />
+              ) : (
+                <Mic size={18} color='white' />
+              )}
             </TouchableOpacity>
           </View>
         </View>

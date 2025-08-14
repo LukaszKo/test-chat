@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { ReplyToMessage } from '../shared/types';
+import { useTheme } from '../../theme/useTheme';
 
 interface ReplyBubbleProps {
   replyTo: ReplyToMessage;
@@ -8,23 +9,49 @@ interface ReplyBubbleProps {
 }
 
 const ReplyBubble: React.FC<ReplyBubbleProps> = ({ replyTo, isMyMessage }) => {
+  const theme = useTheme();
+
   const truncateText = (text: string, maxLength: number = 50) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
 
-  // Color scheme based on whether this is my message or theirs
-  const borderColor = isMyMessage ? 'border-l-white' : 'border-l-blue-500';
-  const nameColor = isMyMessage ? 'text-blue-200' : 'text-blue-600';
-  const textColor = isMyMessage ? 'text-white/80' : 'text-gray-600';
-  const backgroundColor = isMyMessage ? 'bg-white/10' : 'bg-gray-100';
+  const containerStyle: ViewStyle = {
+    marginBottom: theme.spacing.xs,
+    borderRadius: 8,
+    padding: theme.spacing.xs,
+    backgroundColor: isMyMessage 
+      ? 'rgba(255, 255, 255, 0.1)' 
+      : theme.colors.surface,
+    borderLeftWidth: 4,
+    borderLeftColor: isMyMessage 
+      ? 'white' 
+      : theme.colors.primary,
+  };
+
+  const nameStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    fontWeight: theme.typography.fontWeight.medium,
+    color: isMyMessage 
+      ? 'rgba(59, 130, 246, 0.8)' // blue-200 equivalent
+      : theme.colors.primary,
+    marginBottom: theme.spacing.xs / 2,
+  };
+
+  const textStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: isMyMessage 
+      ? 'rgba(255, 255, 255, 0.8)'
+      : theme.colors.textSecondary,
+    lineHeight: theme.typography.lineHeight.small,
+  };
 
   return (
-    <View className={`mb-2 rounded-lg p-2 ${backgroundColor} border-l-4 ${borderColor}`}>
-      <Text className={`text-xs font-medium ${nameColor} mb-1`}>
+    <View style={containerStyle}>
+      <Text style={nameStyle}>
         {replyTo.isMe ? 'You' : (replyTo.senderName || 'Sender')}
       </Text>
-      <Text className={`text-sm ${textColor} leading-4`}>
+      <Text style={textStyle}>
         {truncateText(replyTo.text)}
       </Text>
     </View>

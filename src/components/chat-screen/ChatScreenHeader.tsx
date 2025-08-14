@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { ArrowLeft, Info, Phone, Video, MessageSquare } from 'lucide-react-native';
 import { ChatScreenHeaderProps } from '../shared/types';
+import { useTheme } from '../../theme/useTheme';
 
 const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
   name = 'George Alan',
@@ -12,50 +13,129 @@ const ChatScreenHeader: React.FC<ChatScreenHeaderProps> = ({
   onInfo,
   onSimulateTyping,
 }) => {
+  const theme = useTheme();
+
+  const containerStyle: ViewStyle = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    backgroundColor: theme.colors.background,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 12,
+    zIndex: 50,
+  };
+
+  const leftSectionStyle: ViewStyle = {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  };
+
+  const backButtonStyle: ViewStyle = {
+    marginRight: 12,
+  };
+
+  const userInfoSectionStyle: ViewStyle = {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  };
+
+  const avatarContainerStyle: ViewStyle = {
+    position: 'relative',
+    marginRight: 12,
+  };
+
+  const avatarStyle: ViewStyle = {
+    height: 40,
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    backgroundColor: theme.colors.surface,
+  };
+
+  const onlineIndicatorStyle: ViewStyle = {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: theme.colors.background,
+    backgroundColor: theme.colors.success,
+  };
+
+  const userInfoStyle: ViewStyle = {
+    flex: 1,
+  };
+
+  const nameTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.large,
+    fontWeight: theme.typography.fontWeight.bold,
+    color: theme.colors.text,
+    lineHeight: theme.typography.lineHeight.large,
+  };
+
+  const statusTextStyle: TextStyle = {
+    fontSize: theme.typography.fontSize.small,
+    color: theme.colors.textSecondary,
+    lineHeight: theme.typography.lineHeight.small,
+  };
+
+  const actionButtonsStyle: ViewStyle = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.md,
+  };
+
   return (
-    <View className="flex-row items-center justify-between border-b border-gray-100 bg-white px-4 py-3 z-50">
-      <View className="flex-1 flex-row items-center">
-        <TouchableOpacity onPress={onBack} className="mr-3">
-          <ArrowLeft size={24} color="#374151" />
+    <View style={containerStyle}>
+      <View style={leftSectionStyle}>
+        <TouchableOpacity onPress={onBack} style={backButtonStyle}>
+          <ArrowLeft size={24} color={theme.colors.text} />
         </TouchableOpacity>
 
-        <View className="flex-1 flex-row items-center">
+        <View style={userInfoSectionStyle}>
           {/* Avatar */}
-          <View className="relative mr-3">
-            <View className="h-10 w-10 items-center justify-center rounded-full bg-gray-200">
-              <Text className="text-base">👤</Text>
+          <View style={avatarContainerStyle}>
+            <View style={avatarStyle}>
+              <Text style={{ fontSize: theme.typography.fontSize.medium }}>👤</Text>
             </View>
             {isOnline && (
-              <View className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border border-white bg-green-500" />
+              <View style={onlineIndicatorStyle} />
             )}
           </View>
 
-          <View className="flex-1">
-            <Text className="text-lg font-semibold text-gray-900">{name}</Text>
-            <Text className="text-sm text-gray-500">{isOnline ? 'Online' : 'Offline'}</Text>
+          <View style={userInfoStyle}>
+            <Text style={nameTextStyle}>{name}</Text>
+            <Text style={statusTextStyle}>{isOnline ? 'Online' : 'Offline'}</Text>
           </View>
         </View>
       </View>
 
-      <View className="flex-row items-center space-x-4 gap-4">
+      <View style={actionButtonsStyle}>
         {onSimulateTyping && (
           <TouchableOpacity onPress={onSimulateTyping}>
-            <MessageSquare size={24} color="#374151" />
+            <MessageSquare size={24} color={theme.colors.text} />
           </TouchableOpacity>
         )}
         {onVideoCall && (
           <TouchableOpacity onPress={onVideoCall}>
-            <Video size={24} color="#374151" />
+            <Video size={24} color={theme.colors.text} />
           </TouchableOpacity>
         )}
         {onVoiceCall && (
           <TouchableOpacity onPress={onVoiceCall}>
-            <Phone size={24} color="#374151" />
+            <Phone size={24} color={theme.colors.text} />
           </TouchableOpacity>
         )}
         {onInfo && (
           <TouchableOpacity onPress={onInfo}>
-            <Info size={24} color="#374151" />
+            <Info size={24} color={theme.colors.text} />
           </TouchableOpacity>
         )}
       </View>
