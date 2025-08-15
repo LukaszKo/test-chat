@@ -20,13 +20,13 @@ interface UserReaction {
   timestamp: string;
 }
 
-const ReactionDetailsSheet: React.FC<ReactionDetailsSheetProps> = ({
+const ReactionDetailsSheet = ({
   visible,
   onClose,
   reactions,
   messageText,
   onAddReaction,
-}) => {
+}: ReactionDetailsSheetProps) => {
   const actionSheetRef = useRef<ActionSheetRef>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
@@ -42,15 +42,15 @@ const ReactionDetailsSheet: React.FC<ReactionDetailsSheetProps> = ({
   // Mock user data - in real app this would come from a user service
   const getUserReactions = (): UserReaction[] => {
     const userReactions: UserReaction[] = [];
-    
+
     reactions.forEach((reaction) => {
       // Mock users for each reaction
       const mockUsers = [
-        { id: '1', name: 'Ty', avatar: '👤' },
+        { id: '1', name: 'You', avatar: '👤' },
         { id: '2', name: 'Anna', avatar: '👩' },
-        { id: '3', name: 'Młody Żuku', avatar: '🚗' },
+        { id: '3', name: 'Young Beetle', avatar: '🚗' },
         { id: '4', name: 'Lele', avatar: '🎭' },
-        { id: '5', name: 'Igła', avatar: '🏠' },
+        { id: '5', name: 'Needle', avatar: '🏠' },
       ];
 
       // Create user reactions based on count
@@ -80,7 +80,7 @@ const ReactionDetailsSheet: React.FC<ReactionDetailsSheetProps> = ({
     // Close the reaction details sheet first
     actionSheetRef.current?.hide();
     onClose();
-    
+
     // Then open the emoji picker after a short delay
     setTimeout(() => {
       setShowEmojiPicker(true);
@@ -110,11 +110,10 @@ const ReactionDetailsSheet: React.FC<ReactionDetailsSheetProps> = ({
         containerStyle={styles.container}
         headerAlwaysVisible={true}
         gestureEnabled={true}
-        closeOnTouchBackdrop={true}
-      >
+        closeOnTouchBackdrop={true}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{totalReactions} reakcje</Text>
+          <Text style={styles.title}>{totalReactions} reactions</Text>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕</Text>
           </TouchableOpacity>
@@ -150,8 +149,8 @@ const ReactionDetailsSheet: React.FC<ReactionDetailsSheetProps> = ({
                 <Text style={styles.userAvatar}>{userReaction.avatar}</Text>
                 <View style={styles.userDetails}>
                   <Text style={styles.userName}>{userReaction.name}</Text>
-                  {userReaction.name === 'Ty' && (
-                    <Text style={styles.removeText}>Kliknij, aby usunąć</Text>
+                  {userReaction.name === 'You' && (
+                    <Text style={styles.removeText}>Tap to remove</Text>
                   )}
                 </View>
               </View>
@@ -302,4 +301,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReactionDetailsSheet; 
+export default ReactionDetailsSheet;

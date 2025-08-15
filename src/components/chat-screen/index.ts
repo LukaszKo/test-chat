@@ -8,4 +8,5 @@ export { default as ReplyPreview } from './ReplyPreview';
 export { default as ReplyBubble } from './ReplyBubble';
 export { default as EmojiPicker } from './EmojiPicker';
 export { default as ReactionDetailsSheet } from './ReactionDetailsSheet';
-export { default as TypingIndicator } from './TypingIndicator'; 
+export { default as TypingIndicator } from './TypingIndicator';
+export { default as ScrollToBottomButton } from './ScrollToBottomButton'; 

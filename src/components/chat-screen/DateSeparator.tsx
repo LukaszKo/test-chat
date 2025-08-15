@@ -1,33 +1,27 @@
 import React from 'react';
-import { View, Text, ViewStyle, TextStyle } from 'react-native';
+import { View, Text } from 'react-native';
 import { DateSeparatorProps } from '../shared/types';
-import { useTheme } from '../../theme/useTheme';
+import { useTheme } from '../theme/useTheme';
 
 const DateSeparator: React.FC<DateSeparatorProps> = ({ displayDate }) => {
   const theme = useTheme();
-
-  const containerStyle: ViewStyle = {
-    marginVertical: theme.spacing.lg,
-    alignItems: 'center',
-  };
-
-  const badgeStyle: ViewStyle = {
-    borderRadius: 20,
-    backgroundColor: theme.colors.surface,
-    paddingHorizontal: theme.spacing.sm,
-    paddingVertical: theme.spacing.xs,
-  };
-
-  const textStyle: TextStyle = {
-    fontSize: theme.typography.fontSize.small,
-    color: theme.colors.textSecondary,
-    fontWeight: theme.typography.fontWeight.medium,
-  };
-
+  
   return (
-    <View style={containerStyle}>
-      <View style={badgeStyle}>
-        <Text style={textStyle}>
+    <View style={{
+      marginVertical: theme.spacing.lg,
+      alignItems: 'center',
+    }}>
+      <View style={{
+        borderRadius: theme.borderRadius.full,
+        backgroundColor: theme.colors.surfaceSecondary,
+        paddingHorizontal: theme.spacing.md,
+        paddingVertical: theme.spacing.xs,
+      }}>
+        <Text style={{
+          fontSize: theme.typography.fontSize.xs,
+          color: theme.colors.textSecondary,
+          fontWeight: theme.typography.fontWeight.medium,
+        }}>
           {displayDate}
         </Text>
       </View>

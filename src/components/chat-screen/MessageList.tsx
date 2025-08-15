@@ -1,10 +1,10 @@
 import React, { useRef, useCallback, forwardRef, useImperativeHandle, useMemo } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { MessageListProps, MessageListItem } from '../shared/types';
 import MessageItem from './MessageItem';
 import DateSeparator from './DateSeparator';
 import TypingIndicator from './TypingIndicator';
-import { groupMessagesWithDateSeparators } from '../../utils/dateUtils';
+import { groupMessagesWithDateSeparators } from '../../../utils/dateUtils';
 
 export interface MessageListRef {
   scrollToEnd: (animated?: boolean) => void;
@@ -13,10 +13,11 @@ export interface MessageListRef {
 interface ExtendedMessageListProps extends MessageListProps {
   isTyping?: boolean;
   typingUserName?: string;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
 const MessageList = forwardRef<MessageListRef, ExtendedMessageListProps>(
-  ({ messages, onContentSizeChange, onMessageLongPress, onReactionPress, isTyping }, ref) => {
+  ({ messages, onContentSizeChange, onMessageLongPress, onReactionPress, isTyping, onScroll }, ref) => {
     const flatListRef = useRef<FlatList>(null);
 
     // Group messages with date separators and reverse for inverted FlatList
@@ -74,7 +75,9 @@ const MessageList = forwardRef<MessageListRef, ExtendedMessageListProps>(
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}
           onContentSizeChange={handleContentSizeChange}
-          keyboardShouldPersistTaps='handled'
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          keyboardShouldPersistTaps="handled"
           removeClippedSubviews={false}
           initialNumToRender={20}
           maxToRenderPerBatch={10}

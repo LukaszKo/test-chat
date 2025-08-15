@@ -8,22 +8,16 @@ const mergeTheme = (base: Theme, override: Partial<Theme>): Theme => {
   return {
     colors: { ...base.colors, ...override.colors },
     spacing: { ...base.spacing, ...override.spacing },
+    borderRadius: { ...base.borderRadius, ...override.borderRadius },
     typography: { ...base.typography, ...override.typography },
   };
 };
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ 
-  children, 
-  theme: customTheme 
-}) => {
+export const ThemeProvider = ({ children, theme: customTheme }: ThemeProviderProps) => {
   const mergedTheme = useMemo(() => {
     if (!customTheme) return defaultTheme;
     return mergeTheme(defaultTheme, customTheme);
   }, [customTheme]);
 
-  return (
-    <ThemeContext.Provider value={mergedTheme}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={mergedTheme}>{children}</ThemeContext.Provider>;
 };

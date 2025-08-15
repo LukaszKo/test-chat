@@ -1,88 +1,88 @@
 import React from 'react';
-import { View, Text, ViewStyle, TextStyle } from 'react-native';
+import { View, Text } from 'react-native';
 import { ChatAvatarProps } from './types';
-import { useTheme } from '../../theme/useTheme';
+import { useTheme } from '../theme/useTheme';
 
-const ChatAvatar: React.FC<ChatAvatarProps> = ({ avatar, isOnline = false, size = 'medium' }) => {
+const ChatAvatar: React.FC<ChatAvatarProps> = ({ 
+  avatar, 
+  isOnline = false, 
+  size = 'medium' 
+}) => {
   const theme = useTheme();
 
   const getAvatarSize = () => {
     switch (size) {
       case 'small':
-        return 32;
+        return { width: 32, height: 32 };
       case 'large':
-        return 64;
+        return { width: 64, height: 64 };
       default:
-        return 48;
+        return { width: 48, height: 48 };
     }
   };
 
   const getTextSize = () => {
     switch (size) {
       case 'small':
-        return theme.typography.fontSize.small;
+        return theme.typography.fontSize.sm;
       case 'large':
-        return theme.typography.fontSize.xlarge;
+        return theme.typography.fontSize.xxl;
       default:
-        return theme.typography.fontSize.large;
+        return theme.typography.fontSize.lg;
     }
   };
 
   const getIndicatorSize = () => {
     switch (size) {
       case 'small':
-        return 12;
+        return { width: 12, height: 12 };
       case 'large':
-        return 24;
+        return { width: 24, height: 24 };
       default:
-        return 16;
+        return { width: 16, height: 16 };
     }
   };
 
   const avatarSize = getAvatarSize();
   const indicatorSize = getIndicatorSize();
 
-  const containerStyle: ViewStyle = {
-    position: 'relative',
-  };
-
-  const avatarStyle: ViewStyle = {
-    width: avatarSize,
-    height: avatarSize,
-    borderRadius: avatarSize / 2,
-    backgroundColor: theme.colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  const textStyle: TextStyle = {
-    fontSize: getTextSize(),
-    color: theme.colors.text,
-  };
-
-  const indicatorStyle: ViewStyle = {
-    position: 'absolute',
-    bottom: -2,
-    right: -2,
-    width: indicatorSize,
-    height: indicatorSize,
-    backgroundColor: theme.colors.success,
-    borderRadius: indicatorSize / 2,
-    borderWidth: 2,
-    borderColor: theme.colors.background,
-  };
-
   return (
-    <View style={containerStyle}>
+    <View style={{ position: 'relative' }}>
       {/* Avatar */}
-      <View style={avatarStyle}>
-        <Text style={textStyle}>{avatar}</Text>
+      <View style={[
+        avatarSize,
+        {
+          borderRadius: theme.borderRadius.full,
+          backgroundColor: theme.colors.gray[200],
+          alignItems: 'center',
+          justifyContent: 'center',
+        }
+      ]}>
+        <Text style={{
+          fontSize: getTextSize(),
+          color: theme.colors.text,
+        }}>
+          {avatar}
+        </Text>
       </View>
-
+      
       {/* Online indicator */}
-      {isOnline && <View style={indicatorStyle} />}
+      {isOnline && (
+        <View style={[
+          indicatorSize,
+          {
+            position: 'absolute',
+            bottom: -2,
+            right: -2,
+            backgroundColor: theme.colors.online,
+            borderRadius: theme.borderRadius.full,
+            borderWidth: 2,
+            borderColor: theme.colors.background,
+          }
+        ]} />
+      )}
     </View>
   );
 };
 
-export default ChatAvatar;
+export default ChatAvatar; 

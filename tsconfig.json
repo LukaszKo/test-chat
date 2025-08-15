@@ -1,10 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
 
-  "include": ["./src/**/*", "nativewind-env.d.ts"],
+  "include": ["./src/**/*"],
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "esnext",
-    "jsxImportSource": "nativewind",
     "module": "commonjs",
     "lib": ["es2017"],
     "allowJs": true,
